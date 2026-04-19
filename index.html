@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寄月书 - 给月亮的一封信</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(to bottom, #0c1445 0%, #1a237e 30%, #2c3e50 70%, #1a1a2e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* 月亮 */
+        .moon {
+            position: fixed;
+            top: 50px;
+            right: 80px;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle at 30% 30%, #fff9e6, #f6e27a 20%, #e6c35c 60%, #d4a574 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 60px rgba(246, 227, 122, 0.6), 
+                        0 0 100px rgba(246, 227, 122, 0.3),
+                        inset -20px -20px 50px rgba(0,0,0,0.1);
+            z-index: 1;
+            animation: moonFloat 6s ease-in-out infinite;
+        }
+
+        .moon::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 70% 70%, transparent 40%, rgba(212, 165, 116, 0.3) 70%);
+        }
+
+        @keyframes moonFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 云朵装饰 */
+        .cloud {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            filter: blur(20px);
+            z-index: 1;
+        }
+
+        .cloud1 { width: 200px; height: 60px; top: 20%; left: 10%; animation: float 20s infinite; }
+        .cloud2 { width: 300px; height: 80px; top: 40%; right: 20%; animation: float 25s infinite reverse; }
+        .cloud3 { width: 150px; height: 50px; bottom: 30%; left: 30%; animation: float 30s infinite; }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            50% { transform: translateX(30px) translateY(-10px); }
+        }
+
+        /* 主容器 */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 标题区域 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #f5f5dc;
+        }
+
+        .title {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 4rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(246, 227, 122, 0.5);
+            letter-spacing: 0.5rem;
+            background: linear-gradient(to bottom, #fff9e6, #f6e27a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #c9b896;
+            letter-spacing: 0.3rem;
+            font-weight: 300;
+        }
+
+        /* 嫦娥与玉兔装饰 */
+        .decoration {
+            position: fixed;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .change-e {
+            bottom: 10%;
+            left: 5%;
+            width: 200px;
+            height: 300px;
+            background: url('https://kimi-web-img.moonshot.cn/img/bpic.588ku.com/6af0980c4ce315ef040f9d63ce3c1594b94b6df0') no-repeat center/contain;
+            filter: sepia(100%) hue-rotate(180deg) brightness(1.5);
+            animation: fadeInOut 8s infinite;
+        }
+
+        .jade-rabbit {
+            top: 20%;
+            left: 8%;
+            width: 100px;
+            height: 100px;
+            background: url('https://kimi-web-img.moonshot.cn/img/preview.qiantucdn.com/d0c071e84c7bdef56d0527acb3b15e24ccdf5f73.jpg!qt_h320_webp') no-repeat center/contain;
+            opacity: 0.2;
+            filter: grayscale(100%) brightness(2);
+            animation: hop 4s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
+
+        @keyframes hop {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 信纸容器 */
+        .letter-container {
+            width: 100%;
+            max-width: 600px;
+            background: 
+                linear-gradient(to bottom, rgba(255, 253, 245, 0.95), rgba(250, 248, 240, 0.95)),
+                url('https://kimi-web-img.moonshot.cn/img/bpic.588ku.com/2ff51debdef5ec5572499e15871bca0173bf883b');
+            background-size: cover;
+            background-blend-mode: overlay;
+            border-radius: 4px;
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.3),
+                inset 0 0 60px rgba(139, 69, 19, 0.05);
+            padding: 60px 50px;
+            position: relative;
+            transform: rotate(-1deg);
+            transition: transform 0.3s ease;
+        }
+
+        .letter-container:hover {
+            transform: rotate(0deg) translateY(-5px);
+            box-shadow: 
+                0 15px 50px rgba(0,0,0,0.4),
+                inset 0 0 60px rgba(139, 69, 19, 0.08);
+        }
+
+        /* 信纸边框装饰 */
+        .letter-container::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            pointer-events: none;
+        }
+
+        /* 竖线信纸效果 */
+        .letter-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 39px,
+                rgba(139, 69, 19, 0.1) 39px,
+                rgba(139, 69, 19, 0.1) 40px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 称呼 */
+        .salutation {
+            font-size: 1.4rem;
+            color: #5d4037;
+            margin-bottom: 30px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 文本输入区域 */
+        .letter-content {
+            width: 100%;
+            min-height: 400px;
+            border: none;
+            background: transparent;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.3rem;
+            line-height: 40px;
+            color: #3e2723;
+            resize: vertical;
+            outline: none;
+            position: relative;
+            z-index: 1;
+            padding: 0 10px;
+            letter-spacing: 0.05em;
+        }
+
+        .letter-content::placeholder {
+            color: #8d6e63;
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        /* 落款 */
+        .signature-area {
+            margin-top: 40px;
+            text-align: right;
+            position: relative;
+            z-index: 1;
+        }
+
+        .date {
+            color: #6d4c41;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .signature-input {
+            border: none;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.3);
+            background: transparent;
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 1.5rem;
+            color: #5d4037;
+            text-align: right;
+            width: 150px;
+            outline: none;
+            padding: 5px;
+        }
+
+        .signature-input::placeholder {
+            color: #8d6e63;
+            opacity: 0.5;
+        }
+
+        /* 印章效果 */
+        .seal {
+            position: absolute;
+            bottom: 40px;
+            left: 50px;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #b71c1c;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #b71c1c;
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 1.8rem;
+            transform: rotate(-5deg);
+            opacity: 0.8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .seal:hover {
+            transform: rotate(0deg) scale(1.1);
+            opacity: 1;
+            box-shadow: 0 0 20px rgba(183, 28, 28, 0.3);
+        }
+
+        /* 寄送按钮 */
+        .send-btn {
+            margin-top: 40px;
+            padding: 15px 50px;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: #f5f5dc;
+            border: 2px solid #c9b896;
+            border-radius: 30px;
+            font-family: 'Noto Serif SC', serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .send-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .send-btn:hover::before {
+            left: 100%;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+        }
+
+        .send-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* 飘落的花瓣/桂花效果 */
+        .petal {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0));
+            border-radius: 50% 0 50% 50%;
+            pointer-events: none;
+            z-index: 5;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .title { font-size: 3rem; }
+            .letter-container { padding: 40px 30px; }
+            .moon { width: 80px; height: 80px; top: 30px; right: 30px; }
+            .change-e, .jade-rabbit { display: none; }
+        }
+
+        /* 成功提示 */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: rgba(255, 253, 245, 0.95);
+            padding: 40px 60px;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.5s ease;
+            border: 2px solid #c9b896;
+        }
+
+        .success-message.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .success-message h3 {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 2.5rem;
+            color: #5d4037;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #6d4c41;
+            font-size: 1.1rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- 月亮 -->
+    <div class="moon"></div>
+    
+    <!-- 云朵 -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    
+    <!-- 装饰元素 -->
+    <div class="decoration change-e"></div>
+    <div class="decoration jade-rabbit"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">寄月书</h1>
+            <p class="subtitle">千里共婵娟 · 此情寄明月</p>
+        </div>
+
+        <div class="letter-container">
+            <div class="letter-lines"></div>
+            <div class="salutation">尊敬的月宫仙子：</div>
+            <textarea class="letter-content" placeholder="今夜月色真美...&#10;请在此写下您想对月亮说的话，&#10;嫦娥玉兔会代为转达...&#10;&#10;（支持多行输入）" id="letterText"></textarea>
+            
+            <div class="signature-area">
+                <div class="date" id="currentDate"></div>
+                <input type="text" class="signature-input" placeholder="您的署名" id="signature">
+            </div>
+            
+            <div class="seal" id="seal">月</div>
+        </div>
+
+        <button class="send-btn" onclick="sendLetter()">
+            <span>✉ 寄往月宫</span>
+        </button>
+    </div>
+
+    <!-- 成功提示 -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-message" id="successMsg">
+        <h3>书信已寄出</h3>
+        <p>嫦娥已收到您的信笺<br>愿月光带去我的祝福</p>
+    </div>
+
+    <script>
+        // 生成星星
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 生成飘落的花瓣
+        function createPetals() {
+            setInterval(() => {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.top = '-20px';
+                petal.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                petal.style.opacity = Math.random() * 0.5 + 0.3;
+                document.body.appendChild(petal);
+                
+                setTimeout(() => petal.remove(), 10000);
+            }, 3000);
+        }
+
+        // 设置当前日期
+        function setDate() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            const lunar = getLunarDate();
+            document.getElementById('currentDate').textContent = 
+                `${year}年${month}月${day}日 · ${lunar}`;
+        }
+
+        // 简易农历转换（模拟）
+        function getLunarDate() {
+            const months = ['正月', '二月', '三月', '四月', '五月', '六月', 
+                           '七月', '八月', '九月', '十月', '冬月', '腊月'];
+            const days = ['初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                         '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                         '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+            const date = new Date();
+            // 这里使用简化计算，实际应使用农历库
+            const month = date.getMonth();
+            const day = date.getDate() % 30;
+            return months[month] + days[day];
+        }
+
+        // 寄信功能
+        function sendLetter() {
+            const text = document.getElementById('letterText').value;
+            const signature = document.getElementById('signature').value;
+            
+            if (!text.trim()) {
+                alert('请先写下您想对月亮说的话...');
+                return;
+            }
+
+            // 显示成功消息
+            const overlay = document.getElementById('overlay');
+            const successMsg = document.getElementById('successMsg');
+            
+            overlay.classList.add('show');
+            successMsg.classList.add('show');
+
+            // 创建额外的花瓣效果
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const petal = document.createElement('div');
+                    petal.className = 'petal';
+                    petal.style.left = Math.random() * 100 + '%';
+                    petal.style.top = '-20px';
+                    petal.style.animationDuration = '3s';
+                    petal.style.background = 'radial-gradient(circle, rgba(255, 215, 0, 0.9), rgba(255, 215, 0, 0))';
+                    document.body.appendChild(petal);
+                    setTimeout(() => petal.remove(), 3000);
+                }, i * 100);
+            }
+
+            // 3秒后关闭
+            setTimeout(() => {
+                overlay.classList.remove('show');
+                successMsg.classList.remove('show');
+                document.getElementById('letterText').value = '';
+                document.getElementById('signature').value = '';
+            }, 3000);
+        }
+
+        // 点击遮罩关闭
+        document.getElementById('overlay').addEventListener('click', () => {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('successMsg').classList.remove('show');
+        });
+
+        // 印章点击效果
+        document.getElementById('seal').addEventListener('click', function() {
+            this.style.transform = 'rotate(0deg) scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = 'rotate(-5deg) scale(1)';
+            }, 200);
+        });
+
+        // 初始化
+        window.onload = function() {
+            createStars();
+            createPetals();
+            setDate();
+        };
+
+        // 输入时自动保存到本地（可选功能）
+        let saveTimeout;
+        document.getElementById('letterText').addEventListener('input', function() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('moonLetter', this.value);
+            }, 1000);
+        });
+
+        // 恢复草稿
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('moonLetter');
+            if (saved) {
+                document.getElementById('letterText').value = saved;
+            }
+        });
+    </script>
+</body>
+</html>
